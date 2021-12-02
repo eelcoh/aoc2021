@@ -53,9 +53,6 @@ resultString ( up, down ) =
 
 countUpDown : List Int -> ( Int, Int )
 countUpDown vals =
-    -- scanl1 upDown_ vals
-    --     |> List.map directionFromInt
-    --     |> countValues
     toDirections vals
         |> countValues
 
@@ -75,23 +72,6 @@ isDown dir =
     dir == Down
 
 
-directionFromInt : Int -> Direction
-directionFromInt v =
-    if v < 0 then
-        Down
-
-    else if v > 0 then
-        Up
-
-    else
-        Same
-
-
-upDown_ : Int -> Int -> Int
-upDown_ a b =
-    b - a
-
-
 toDirections : List Int -> List Direction
 toDirections vals =
     case vals of
@@ -102,6 +82,18 @@ toDirections vals =
             []
 
 
+toDirection : Int -> Int -> Direction
 toDirection a b =
-    upDown_ a b
-        |> directionFromInt
+    directionFromInt (b - a)
+
+
+directionFromInt : Int -> Direction
+directionFromInt v =
+    if v < 0 then
+        Down
+
+    else if v > 0 then
+        Up
+
+    else
+        Same
