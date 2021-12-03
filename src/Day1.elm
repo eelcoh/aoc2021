@@ -26,16 +26,16 @@ program process =
 
 
 type Direction
-    = Up
-    | Down
-    | Same
+    = Increase
+    | Decrease
+    | Unchanged
 
 
 processFileContents : String -> String
 processFileContents contents =
     String.lines contents
         |> List.filterMap String.toInt
-        |> countUpDown
+        |> processValues
         |> resultString
 
 
@@ -51,25 +51,25 @@ resultString ( up, down ) =
         |> String.concat
 
 
-countUpDown : List Int -> ( Int, Int )
-countUpDown vals =
+processValues : List Int -> ( Int, Int )
+processValues vals =
     toDirections vals
         |> countValues
 
 
 countValues : List Direction -> ( Int, Int )
 countValues dirs =
-    ( List.Extra.count isUp dirs, List.Extra.count isDown dirs )
+    ( List.Extra.count increased dirs, List.Extra.count decreased dirs )
 
 
-isUp : Direction -> Bool
-isUp dir =
-    dir == Up
+increased : Direction -> Bool
+increased dir =
+    dir == Increase
 
 
-isDown : Direction -> Bool
-isDown dir =
-    dir == Down
+decreased : Direction -> Bool
+decreased dir =
+    dir == Decrease
 
 
 toDirections : List Int -> List Direction
@@ -84,16 +84,11 @@ toDirections vals =
 
 toDirection : Int -> Int -> Direction
 toDirection a b =
-    directionFromInt (b - a)
+    if b < a then
+        Decrease
 
-
-directionFromInt : Int -> Direction
-directionFromInt v =
-    if v < 0 then
-        Down
-
-    else if v > 0 then
-        Up
+    else if b > a then
+        Increase
 
     else
-        Same
+        Unchanged
