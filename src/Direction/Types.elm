@@ -7,7 +7,3 @@ type Direction
     | Forward Int
     | Backward Int
     | Unchanged
-
-
-type alias Values =
-    ( Int, Int )

@@ -1,7 +1,8 @@
 module Direction exposing (..)
 
 import Direction.Parser as P exposing (..)
-import Direction.Types exposing (Direction(..), Values)
+import Direction.Types exposing (Direction(..))
+import Value exposing (Values, addValues)
 
 
 calculateChange : List Direction -> Values
@@ -70,11 +71,6 @@ parseDirection dirstring =
 add : Direction -> Direction -> ( Int, Int )
 add dir1 dir2 =
     addValues (toValues dir1) (toValues dir2)
-
-
-addValues : Values -> Values -> Values
-addValues ( x1, y1 ) ( x2, y2 ) =
-    ( x1 + x2, y1 + y2 )
 
 
 toValues : Direction -> Values
