@@ -1,4 +1,4 @@
-module Day1 exposing (program)
+module Day2 exposing (program)
 
 import Dict exposing (Dict)
 import Direction exposing (..)
@@ -29,29 +29,36 @@ program process =
 processFileContents : String -> String
 processFileContents contents =
     String.lines contents
-        |> List.filterMap String.toInt
-        |> processValues
+        |> List.filterMap parseDirection
+        |> calculateChange
         |> resultString
 
 
 resultString : ( Int, Int ) -> String
-resultString ( up, down ) =
-    [ "there are "
-    , String.fromInt up
-    , " measurements that are larger than the previous measurement,"
+resultString ( vertical, horizontal ) =
+    let
+        vertText =
+            if vertical > 0 then
+                "we moved " ++ String.fromInt vertical ++ " down"
+
+            else if vertical < 0 then
+                "we moved " ++ String.fromInt vertical ++ " up"
+
+            else
+                "we did not move vertically"
+
+        horiText =
+            if horizontal > 0 then
+                "we moved " ++ String.fromInt horizontal ++ " forward"
+
+            else if horizontal < 0 then
+                "we moved " ++ String.fromInt horizontal ++ " backward"
+
+            else
+                "we did not move horizontally"
+    in
+    [ vertText
     , "\nand "
-    , String.fromInt down
-    , " measurements that are smaller than the previous measurement."
+    , horiText
     ]
         |> String.concat
-
-
-processValues : List Int -> ( Int, Int )
-processValues vals =
-    toVerticalShifts vals
-        |> countValues
-
-
-countValues : List Direction -> ( Int, Int )
-countValues dirs =
-    ( List.Extra.count isDownward dirs, List.Extra.count isUpward dirs )
