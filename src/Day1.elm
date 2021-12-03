@@ -2,6 +2,7 @@ module Day1 exposing (program)
 
 import Dict exposing (Dict)
 import Direction exposing (..)
+import Direction.Types exposing (Direction)
 import List.Extra exposing (scanl1)
 import Posix.IO as IO exposing (IO, Process)
 import Posix.IO.File as File

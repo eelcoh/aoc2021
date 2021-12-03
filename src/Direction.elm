@@ -1,18 +1,7 @@
 module Direction exposing (..)
 
-import Parser as P exposing ((|.), (|=), Parser, succeed)
-
-
-type Direction
-    = Downward Int
-    | Upward Int
-    | Forward Int
-    | Backward Int
-    | Unchanged
-
-
-type alias Values =
-    ( Int, Int )
+import Direction.Parser as P exposing (..)
+import Direction.Types exposing (Direction(..), Values)
 
 
 calculateChange : List Direction -> Values
@@ -75,50 +64,7 @@ toVerticalShift a b =
 
 parseDirection : String -> Maybe Direction
 parseDirection dirstring =
-    P.run parseDirections dirstring
-        |> Result.toMaybe
-
-
-parseDirections : Parser Direction
-parseDirections =
-    P.oneOf
-        [ parseUpward
-        , parseDownward
-        , parseForward
-        , parseBackward
-        ]
-
-
-parseUpward : Parser Direction
-parseUpward =
-    succeed Upward
-        |. P.keyword "up"
-        |. P.spaces
-        |= P.int
-
-
-parseDownward : Parser Direction
-parseDownward =
-    succeed Downward
-        |. P.keyword "down"
-        |. P.spaces
-        |= P.int
-
-
-parseForward : Parser Direction
-parseForward =
-    succeed Forward
-        |. P.keyword "forward"
-        |. P.spaces
-        |= P.int
-
-
-parseBackward : Parser Direction
-parseBackward =
-    succeed Backward
-        |. P.keyword "backward"
-        |. P.spaces
-        |= P.int
+    P.parseDirection dirstring |> Result.toMaybe
 
 
 add : Direction -> Direction -> ( Int, Int )
