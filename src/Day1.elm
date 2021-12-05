@@ -31,7 +31,7 @@ processFileContents : String -> String
 processFileContents contents =
     String.lines contents
         |> List.filterMap String.toInt
-        |> processValues
+        |> processValues2
         |> resultString
 
 
@@ -50,6 +50,14 @@ resultString ( up, down ) =
 processValues : List Int -> ( Int, Int )
 processValues vals =
     toVerticalShifts vals
+        |> countValues
+
+
+processValues2 : List Int -> ( Int, Int )
+processValues2 vals =
+    List.Extra.groupsOfWithStep 3 1 vals
+        |> List.map List.sum
+        |> toVerticalShifts
         |> countValues
 
 
