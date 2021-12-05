@@ -34,7 +34,7 @@ processFileContents contents =
             String.lines contents
                 |> split (\s -> s == "")
                 |> parseCards
-                |> processCards values
+                |> processCards2 values
 
         printCard_ ( card, cardV, v ) =
             String.join "\n" [ printCard card, String.fromInt cardV, String.fromInt v, String.fromInt (v * cardV) ]
@@ -60,6 +60,29 @@ processCards vals cards =
             else
                 List.map Tuple.first foundBingo
                     |> List.map (\c -> ( c, cardValue c, v ))
+
+        _ ->
+            []
+
+
+processCards2 : List Int -> List Card -> List ( Card, Int, Int )
+processCards2 vals cards =
+    case vals of
+        v :: rest ->
+            let
+                processedCards =
+                    List.map (newValue v) cards
+
+                foundBingo =
+                    List.filter (not << Tuple.second) processedCards
+            in
+            if List.length foundBingo < 2 then
+                List.map Tuple.first foundBingo
+                    |> processCards rest
+                -- |> List.map (\c_ -> ( c_, cardValue c_, v ))
+
+            else
+                processCards2 rest (List.map Tuple.first foundBingo)
 
         _ ->
             []
