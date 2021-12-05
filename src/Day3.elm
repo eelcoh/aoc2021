@@ -1,6 +1,5 @@
 module Day3 exposing (program)
 
-import Dict exposing (Dict)
 import List.Extra exposing (scanl1)
 import Noise exposing (..)
 import Posix.IO as IO exposing (IO, Process)
@@ -28,10 +27,35 @@ program process =
 
 processFileContents : String -> String
 processFileContents contents =
-    String.lines contents
-        |> List.filterMap parseNoise
-        |> noiseValues
-        |> resultString
+    let
+        gamma =
+            String.lines contents
+                |> List.filterMap parseNoise
+                |> toGamma
+
+        epsilon =
+            toEpsilon gamma
+
+        gammaValue =
+            bitsToValue gamma
+
+        epsilonValue =
+            bitsToValue epsilon
+
+        rs =
+            [ "gamma : "
+                ++ bitsToString gamma
+                ++ " - "
+                ++ String.fromInt gammaValue
+            , "epsilon : "
+                ++ bitsToString epsilon
+                ++ " - "
+                ++ String.fromInt epsilonValue
+            , "total : "
+                ++ String.fromInt (epsilonValue * gammaValue)
+            ]
+    in
+    String.join "\n" rs
 
 
 resultString : ( Int, Int ) -> String
