@@ -2,7 +2,7 @@ module Day4 exposing (program)
 
 import Bingo exposing (..)
 import Dict exposing (Dict)
-import List.Extra exposing (scanl1)
+import List.Extra exposing (dropWhile, scanl1)
 import List.Split exposing (split)
 import Posix.IO as IO exposing (IO, Process)
 import Posix.IO.File as File
@@ -34,9 +34,35 @@ processFileContents contents =
             String.lines contents
                 |> split (\s -> s == "")
                 |> parseCards
+                |> processCards values
+
+        printCard_ ( card, cardV, v ) =
+            String.join "\n" [ printCard card, String.fromInt cardV, String.fromInt v, String.fromInt (v * cardV) ]
     in
-    List.map printCard cards
+    List.map printCard_ cards
         |> String.join "\n\n"
+
+
+processCards : List Int -> List Card -> List ( Card, Int, Int )
+processCards vals cards =
+    case vals of
+        v :: rest ->
+            let
+                processedCards =
+                    List.map (newValue v) cards
+
+                foundBingo =
+                    List.filter Tuple.second processedCards
+            in
+            if List.isEmpty foundBingo then
+                processCards rest (List.map Tuple.first processedCards)
+
+            else
+                List.map Tuple.first foundBingo
+                    |> List.map (\c -> ( c, cardValue c, v ))
+
+        _ ->
+            []
 
 
 
@@ -60,7 +86,7 @@ resultString ( zeroes, ones ) =
         |> String.concat
 
 
-vals =
+values =
     [ 10
     , 80
     , 6

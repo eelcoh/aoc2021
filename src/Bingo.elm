@@ -64,12 +64,12 @@ bingo card =
 
 bingoCard : Card -> Bool
 bingoCard card =
-    List.all bingoRange <| ranges card
+    List.any bingoRange <| ranges card
 
 
 bingoRange : Range -> Bool
 bingoRange r =
-    List.all (\c -> Tuple.second c) <| cells r
+    List.all Tuple.second <| cells r
 
 
 cardSum : Card -> Int
@@ -206,3 +206,25 @@ printInt i =
 
     else
         String.fromInt i
+
+
+
+-- values
+
+
+cardValue c =
+    List.map rangeValue (ranges c)
+        |> List.sum
+
+
+rangeValue r =
+    List.map cellValue (cells r)
+        |> List.sum
+
+
+cellValue ( v, t ) =
+    if t then
+        0
+
+    else
+        v
