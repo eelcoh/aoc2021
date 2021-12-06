@@ -1,12 +1,17 @@
-module Noise exposing (Noise, bitsToString, bitsToValue, noiseValues, parseNoise, toEpsilon, toGamma)
+module Noise exposing (Bit(..), Noise, bitsToString, bitsToValue, noiseValues, parseNoise, toCO2, toEpsilon, toGamma, toOxygen)
 
 import List.Extra
 import Parser as P exposing ((|.), (|=), Parser, oneOf, succeed)
 import Value exposing (Values, addValues)
+import ZipList exposing (ZipList)
 
 
 type Noise
     = Noise Bit Bit Bit Bit Bit Bit Bit Bit Bit Bit Bit Bit
+
+
+type alias BitList =
+    List Bit
 
 
 type Bit
@@ -47,6 +52,82 @@ toGamma noises =
     List.map noiseToList noises
         |> List.Extra.transpose
         |> List.map toGamma_
+
+
+toOxygen : List Noise -> Int
+toOxygen noises =
+    zip noises
+        |> toOxygen_
+        |> bitsToValue
+
+
+toCO2 : List Noise -> Int
+toCO2 noises =
+    zip noises
+        |> toCO2_
+        |> bitsToValue
+
+
+zip noises =
+    List.map noiseToList noises
+        |> List.map ZipList.fromList
+        |> List.filterMap identity
+
+
+toOxygen_ : List (ZipList Bit) -> List Bit
+toOxygen_ noises =
+    let
+        keep =
+            List.map ZipList.current noises
+                |> List.partition ((==) Zero)
+                |> criteria
+
+        criteria ( zeroes, ones ) =
+            if List.length ones >= List.length zeroes then
+                One
+
+            else
+                Zero
+    in
+    case noises of
+        x :: [] ->
+            ZipList.toList x
+
+        [] ->
+            []
+
+        _ ->
+            List.filter (\x -> ZipList.current x == keep) noises
+                |> List.map ZipList.forward
+                |> toOxygen_
+
+
+toCO2_ : List (ZipList Bit) -> List Bit
+toCO2_ noises =
+    let
+        keep =
+            List.map ZipList.current noises
+                |> List.partition ((==) Zero)
+                |> criteria
+
+        criteria ( zeroes, ones ) =
+            if List.length zeroes <= List.length ones then
+                Zero
+
+            else
+                One
+    in
+    case noises of
+        x :: [] ->
+            ZipList.toList x
+
+        [] ->
+            []
+
+        _ ->
+            List.filter (\x -> ZipList.current x == keep) noises
+                |> List.map ZipList.forward
+                |> toCO2_
 
 
 toEpsilon : List Bit -> List Bit

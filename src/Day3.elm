@@ -39,5 +39,18 @@ part1 noise =
     String.fromInt (epsilonValue * gammaValue)
 
 
-part2 _ =
-    "not implemented"
+part2 : List Noise -> String
+part2 noises =
+    let
+        oxVal =
+            toOxygen noises
+
+        coVal =
+            toCO2 noises
+
+        -- x =
+        --     List.map noiseToList noises
+        --         |> List.Extra.transpose
+        --         |> List.map toGamma_
+    in
+    String.fromInt <| oxVal * coVal
