@@ -1,46 +1,40 @@
-module Day4 exposing (program)
+module Day4 exposing (process)
 
 import Bingo exposing (..)
-import Dict exposing (Dict)
 import List.Extra exposing (dropWhile, scanl1)
 import List.Split exposing (split)
-import Posix.IO as IO exposing (IO, Process)
-import Posix.IO.File as File
-import Posix.IO.Process as Proc
 
 
-program : Process -> IO ()
-program process =
-    case process.argv of
-        [ _, filename ] ->
-            IO.do
-                (File.contentsOf filename
-                    |> IO.exitOnError identity
-                )
-            <|
-                \content ->
-                    IO.do (Proc.print (processFileContents content)) <|
-                        \_ ->
-                            IO.return ()
-
-        _ ->
-            Proc.logErr "Usage: elm-cli <program> file\n"
-
-
-processFileContents : String -> String
-processFileContents contents =
+process : String -> ( String, String )
+process contents =
     let
         cards =
             String.lines contents
                 |> split (\s -> s == "")
                 |> parseCards
-                |> processCards2 values
 
-        printCard_ ( card, cardV, v ) =
-            String.join "\n" [ printCard card, String.fromInt cardV, String.fromInt v, String.fromInt (v * cardV) ]
+        -- printCard_ ( card, cardV, v ) =
+        --     String.join "\n" [ printCard card, String.fromInt cardV, String.fromInt v, String.fromInt (v * cardV) ]
     in
-    List.map printCard_ cards
-        |> String.join "\n\n"
+    ( part1 cards, part2 cards )
+
+
+part1 : List Card -> String
+part1 cards =
+    processCards values cards
+        |> toValueString
+
+
+part2 : List Card -> String
+part2 cards =
+    processCards2 values cards
+        |> toValueString
+
+
+toValueString result =
+    List.head result
+        |> Maybe.map (\( _, cardV, v ) -> String.fromInt (cardV * v))
+        |> Maybe.withDefault "not found"
 
 
 processCards : List Int -> List Card -> List ( Card, Int, Int )
@@ -92,21 +86,18 @@ processCards2 vals cards =
 -- |> List.filterMap parseNoise
 -- |> noiseValues
 -- |> resultString
-
-
-resultString : ( Int, Int ) -> String
-resultString ( zeroes, ones ) =
-    let
-        zeroesTxt =
-            "there are " ++ String.fromInt zeroes ++ " strings with a majority of zeroes"
-
-        onesTxt =
-            "\nand there are " ++ String.fromInt ones ++ " strings with a majority of ones"
-    in
-    [ zeroesTxt
-    , onesTxt
-    ]
-        |> String.concat
+-- resultString : ( Int, Int ) -> String
+-- resultString ( zeroes, ones ) =
+--     let
+--         zeroesTxt =
+--             "there are " ++ String.fromInt zeroes ++ " strings with a majority of zeroes"
+--         onesTxt =
+--             "\nand there are " ++ String.fromInt ones ++ " strings with a majority of ones"
+--     in
+--     [ zeroesTxt
+--     , onesTxt
+--     ]
+--         |> String.concat
 
 
 values =

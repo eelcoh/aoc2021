@@ -7,6 +7,7 @@ module Day exposing (program)
 
 import Day1
 import Day2
+import Day4
 import Posix.IO as IO exposing (IO, Process)
 import Posix.IO.File as File
 import Posix.IO.Process as Proc
@@ -39,6 +40,10 @@ processDay day content =
 
         "2" ->
             Day2.process content
+                |> resultString
+
+        "4" ->
+            Day4.process content
                 |> resultString
 
         _ ->
