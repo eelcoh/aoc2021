@@ -8,9 +8,9 @@ To run an example, you need to have installed [Elm Posix] (https://github.com/al
 Then for example, you can run the code with this:
 
 ```
-→ elm-cli run src/Day2.elm inputs/day2.txt
-we moved 15 down
-and we moved 10 forward
+→ elm-cli run src/Day.elm <day number>
+part1 : <value>
+part2 : <value>
 ```
 
 This runs the source for day 2, with the input for day 2. Obviously you can try to run the source for day 2 with the input for day 1, but that will not result in interesting output.
