@@ -1,10 +1,12 @@
 module Day exposing (program)
 
+-- import Dict exposing (Dict)
+-- import Direction exposing (..)
+-- import Direction.Types exposing (Direction)
+-- import List.Extra exposing (scanl1)
+
 import Day1
-import Dict exposing (Dict)
-import Direction exposing (..)
-import Direction.Types exposing (Direction)
-import List.Extra exposing (scanl1)
+import Day2
 import Posix.IO as IO exposing (IO, Process)
 import Posix.IO.File as File
 import Posix.IO.Process as Proc
@@ -33,6 +35,10 @@ processDay day content =
     case day of
         "1" ->
             Day1.process content
+                |> resultString
+
+        "2" ->
+            Day2.process content
                 |> resultString
 
         _ ->

@@ -1,66 +1,23 @@
-module Day2 exposing (program)
+module Day2 exposing (process)
 
-import Dict exposing (Dict)
-import Direction exposing (..)
-import List.Extra exposing (scanl1)
-import Posix.IO as IO exposing (IO, Process)
-import Posix.IO.File as File
-import Posix.IO.Process as Proc
+import Direction exposing (calculateChange, calculateWithAim, parseDirection)
 
 
-program : Process -> IO ()
-program process =
-    case process.argv of
-        [ _, filename ] ->
-            IO.do
-                (File.contentsOf filename
-                    |> IO.exitOnError identity
-                )
-            <|
-                \content ->
-                    IO.do (Proc.print (processFileContents content)) <|
-                        \_ ->
-                            IO.return ()
-
-        _ ->
-            Proc.logErr "Usage: elm-cli <program> file\n"
-
-
-processFileContents : String -> String
-processFileContents contents =
-    String.lines contents
-        |> List.filterMap parseDirection
-        |> calculateWithAim
-        |> resultString
-
-
-resultString : ( Int, Int ) -> String
-resultString ( vertical, horizontal ) =
+process : String -> ( String, String )
+process filecontents =
     let
-        vertText =
-            if vertical > 0 then
-                "we moved " ++ String.fromInt vertical ++ " down"
-
-            else if vertical < 0 then
-                "we moved " ++ String.fromInt vertical ++ " up"
-
-            else
-                "we did not move vertically"
-
-        horiText =
-            if horizontal > 0 then
-                "we moved " ++ String.fromInt horizontal ++ " forward"
-
-            else if horizontal < 0 then
-                "we moved " ++ String.fromInt horizontal ++ " backward"
-
-            else
-                "we did not move horizontally"
+        input =
+            String.lines filecontents
+                |> List.filterMap parseDirection
     in
-    [ vertText
-    , "\nand "
-    , horiText
-    , "\nand the answer to the question = "
-    , String.fromInt (vertical * horizontal)
-    ]
-        |> String.concat
+    ( part1 input, part2 input )
+
+
+part1 dirs =
+    calculateChange dirs
+        |> String.fromInt
+
+
+part2 dirs =
+    calculateWithAim dirs
+        |> String.fromInt

@@ -6,15 +6,17 @@ import List.Extra
 import Value exposing (Values, addValues)
 
 
-calculateChange : List Direction -> Values
+calculateChange : List Direction -> Int
 calculateChange dirs =
     List.map toValues dirs
         |> List.foldl addValues ( 0, 0 )
+        |> (\( a, b ) -> a * b)
 
 
-calculateWithAim : List Direction -> Values
+calculateWithAim : List Direction -> Int
 calculateWithAim dirs =
     calculateWithAim_ ( 0, ( 0, 0 ) ) dirs
+        |> (\( a, b ) -> a * b)
 
 
 calculateWithAim_ : ( Int, Values ) -> List Direction -> Values
