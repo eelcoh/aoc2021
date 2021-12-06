@@ -2,6 +2,7 @@ module Direction exposing (..)
 
 import Direction.Parser as P exposing (..)
 import Direction.Types exposing (Direction(..))
+import List.Extra
 import Value exposing (Values, addValues)
 
 
@@ -9,6 +10,20 @@ calculateChange : List Direction -> Values
 calculateChange dirs =
     List.map toValues dirs
         |> List.foldl addValues ( 0, 0 )
+
+
+calculateWithAim : List Direction -> Values
+calculateWithAim dirs =
+    calculateWithAim_ ( 0, ( 0, 0 ) ) dirs
+
+
+calculateWithAim_ : ( Int, Values ) -> List Direction -> Values
+calculateWithAim_ ( aim, vals ) dirs =
+    let
+        ( aim_, vals_ ) =
+            List.foldl toValuesAim ( aim, vals ) dirs
+    in
+    vals_
 
 
 isDownward : Direction -> Bool
@@ -90,3 +105,37 @@ toValues dir =
 
         Unchanged ->
             ( 0, 0 )
+
+
+
+-- forward 5 adds 5 to your horizontal position, a total of 5. Because your aim is 0, your depth does not change.
+-- -> (0, (5, 0))
+-- down 5 adds 5 to your aim, resulting in a value of 5.
+-- -> (5, (5, 0))
+-- forward 8 adds 8 to your horizontal position, a total of 13. Because your aim is 5, your depth increases by 8*5=40.
+-- -> (5, (13, 40))
+-- up 3 decreases your aim by 3, resulting in a value of 2.
+-- -> (2, (13, 40))
+-- down 8 adds 8 to your aim, resulting in a value of 10.
+-- -> (10, (13, 40))
+-- forward 2 adds 2 to your horizontal position, a total of 15. Because your aim is 10, your depth increases by 2*10=20 to a total of 60.
+-- -> (10, (15, 60))
+
+
+toValuesAim : Direction -> ( Int, Values ) -> ( Int, Values )
+toValuesAim dir ( aim, ( x, y ) ) =
+    case dir of
+        Upward y_ ->
+            ( aim - y_, ( x, y ) )
+
+        Downward y_ ->
+            ( aim + y_, ( x, y ) )
+
+        Forward x_ ->
+            ( aim, ( x + x_, y + (aim * x_) ) )
+
+        Backward x_ ->
+            ( aim, ( x - x_, y - (aim * x_) ) )
+
+        Unchanged ->
+            ( aim, ( x, y ) )

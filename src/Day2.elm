@@ -30,7 +30,7 @@ processFileContents : String -> String
 processFileContents contents =
     String.lines contents
         |> List.filterMap parseDirection
-        |> calculateChange
+        |> calculateWithAim
         |> resultString
 
 
@@ -60,5 +60,7 @@ resultString ( vertical, horizontal ) =
     [ vertText
     , "\nand "
     , horiText
+    , "\nand the answer to the question = "
+    , String.fromInt (vertical * horizontal)
     ]
         |> String.concat
