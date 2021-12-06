@@ -1,4 +1,4 @@
-module Noise exposing (bitsToString, bitsToValue, noiseValues, parseNoise, toEpsilon, toGamma)
+module Noise exposing (Noise, bitsToString, bitsToValue, noiseValues, parseNoise, toEpsilon, toGamma)
 
 import List.Extra
 import Parser as P exposing ((|.), (|=), Parser, oneOf, succeed)

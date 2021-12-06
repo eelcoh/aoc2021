@@ -1,37 +1,31 @@
-module Day3 exposing (program)
+module Day3 exposing (process)
 
 import List.Extra exposing (scanl1)
 import Noise exposing (..)
-import Posix.IO as IO exposing (IO, Process)
-import Posix.IO.File as File
-import Posix.IO.Process as Proc
 
 
-program : Process -> IO ()
-program process =
-    case process.argv of
-        [ _, filename ] ->
-            IO.do
-                (File.contentsOf filename
-                    |> IO.exitOnError identity
-                )
-            <|
-                \content ->
-                    IO.do (Proc.print (processFileContents content)) <|
-                        \_ ->
-                            IO.return ()
 
-        _ ->
-            Proc.logErr "Usage: elm-cli <program> file\n"
+-- → elm-cli run src/Day3.elm inputs/day3.txt
+-- gamma : 110000111111 - 3135
+-- epsilon : 001111000000 - 960
+-- total : 3009600
 
 
-processFileContents : String -> String
-processFileContents contents =
+process : String -> ( String, String )
+process contents =
     let
-        gamma =
+        noise =
             String.lines contents
                 |> List.filterMap parseNoise
-                |> toGamma
+    in
+    ( part1 noise, part2 noise )
+
+
+part1 : List Noise -> String
+part1 noise =
+    let
+        gamma =
+            toGamma noise
 
         epsilon =
             toEpsilon gamma
@@ -41,33 +35,9 @@ processFileContents contents =
 
         epsilonValue =
             bitsToValue epsilon
-
-        rs =
-            [ "gamma : "
-                ++ bitsToString gamma
-                ++ " - "
-                ++ String.fromInt gammaValue
-            , "epsilon : "
-                ++ bitsToString epsilon
-                ++ " - "
-                ++ String.fromInt epsilonValue
-            , "total : "
-                ++ String.fromInt (epsilonValue * gammaValue)
-            ]
     in
-    String.join "\n" rs
+    String.fromInt (epsilonValue * gammaValue)
 
 
-resultString : ( Int, Int ) -> String
-resultString ( zeroes, ones ) =
-    let
-        zeroesTxt =
-            "there are " ++ String.fromInt zeroes ++ " strings with a majority of zeroes"
-
-        onesTxt =
-            "\nand there are " ++ String.fromInt ones ++ " strings with a majority of ones"
-    in
-    [ zeroesTxt
-    , onesTxt
-    ]
-        |> String.concat
+part2 _ =
+    "not implemented"
