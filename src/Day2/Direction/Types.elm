@@ -1,4 +1,4 @@
-module Direction.Types exposing (..)
+module Day2.Direction.Types exposing (..)
 
 
 type Direction

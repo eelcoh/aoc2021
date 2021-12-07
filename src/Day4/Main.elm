@@ -1,8 +1,7 @@
-module Day4 exposing (process)
+module Day4.Main exposing (process)
 
-import Bingo exposing (..)
-import List.Extra exposing (dropWhile, scanl1)
-import List.Split exposing (split)
+import Day4.Bingo exposing (..)
+import Day4.Split exposing (split)
 
 
 process : String -> ( String, String )

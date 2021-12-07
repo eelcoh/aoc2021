@@ -1,7 +1,7 @@
-module Day2 exposing (process)
+module Day2.Main exposing (process)
 
-import Direction exposing (calculateChange, calculateWithAim, parseDirection)
-import Direction.Types exposing (Direction)
+import Day2.Direction exposing (calculateChange, calculateWithAim, parseDirection)
+import Day2.Direction.Types exposing (Direction)
 
 
 process : String -> ( String, String )

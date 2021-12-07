@@ -1,7 +1,7 @@
-module Day1 exposing (process)
+module Day1.Main exposing (process)
 
-import Direction exposing (..)
-import Direction.Types exposing (Direction)
+import Day2.Direction exposing (..)
+import Day2.Direction.Types exposing (Direction)
 import List.Extra
 
 

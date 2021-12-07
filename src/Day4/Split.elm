@@ -1,4 +1,4 @@
-module List.Split exposing (..)
+module Day4.Split exposing (..)
 
 import List.Extra exposing (dropWhile, splitWhen)
 

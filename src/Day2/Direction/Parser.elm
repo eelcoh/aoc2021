@@ -1,6 +1,6 @@
-module Direction.Parser exposing (..)
+module Day2.Direction.Parser exposing (..)
 
-import Direction.Types exposing (Direction(..))
+import Day2.Direction.Types exposing (Direction(..))
 import Parser as P exposing ((|.), (|=), Parser, succeed)
 
 

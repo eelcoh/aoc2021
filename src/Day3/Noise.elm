@@ -1,8 +1,8 @@
-module Noise exposing (Bit(..), Noise, bitsToString, bitsToValue, noiseValues, parseNoise, toCO2, toEpsilon, toGamma, toOxygen)
+module Day3.Noise exposing (Bit(..), Noise, bitsToString, bitsToValue, noiseValues, parseNoise, toCO2, toEpsilon, toGamma, toOxygen)
 
+import Day3.Value exposing (Values, addValues)
 import List.Extra
 import Parser as P exposing ((|.), (|=), Parser, oneOf, succeed)
-import Value exposing (Values, addValues)
 import ZipList exposing (ZipList)
 
 
@@ -163,7 +163,7 @@ toGamma_ bits =
                 One
     in
     List.map toValues bits
-        |> Value.sum
+        |> Day3.Value.sum
         |> toBit
 
 
@@ -180,7 +180,7 @@ noiseValues noises =
     in
     List.map noiseValue noises
         |> List.map toValues
-        |> Value.sum
+        |> Day3.Value.sum
 
 
 

@@ -1,9 +1,9 @@
-module Direction exposing (..)
+module Day2.Direction exposing (..)
 
-import Direction.Parser as P exposing (..)
-import Direction.Types exposing (Direction(..))
+import Day2.Direction.Parser as P exposing (..)
+import Day2.Direction.Types exposing (Direction(..))
+import Day3.Value exposing (Values, addValues)
 import List.Extra
-import Value exposing (Values, addValues)
 
 
 calculateChange : List Direction -> Int

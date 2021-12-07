@@ -1,7 +1,7 @@
-module Day3 exposing (process)
+module Day3.Main exposing (process)
 
+import Day3.Noise exposing (..)
 import List.Extra exposing (scanl1)
-import Noise exposing (..)
 
 
 

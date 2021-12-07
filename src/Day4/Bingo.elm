@@ -1,4 +1,4 @@
-module Bingo exposing (..)
+module Day4.Bingo exposing (..)
 
 import Parser as P exposing ((|.), (|=), Parser, succeed)
 
@@ -15,6 +15,7 @@ type Card
     = Card Range Range Range Range Range
 
 
+range : Cell -> Cell -> Cell -> Cell -> Cell -> Range
 range c1 c2 c3 c4 c5 =
     Range
         c1
@@ -24,6 +25,7 @@ range c1 c2 c3 c4 c5 =
         c5
 
 
+cell : a -> ( a, Bool )
 cell i =
     ( i, False )
 
@@ -177,6 +179,7 @@ parseCell =
 -- print
 
 
+printCard : Card -> String
 printCard c =
     let
         rangeStrings =
@@ -186,12 +189,14 @@ printCard c =
     String.join "\n" ("========= Card =========" :: rangeStrings)
 
 
+printRange : Range -> String
 printRange r =
     cells r
         |> List.map printCell
         |> String.join " "
 
 
+printCell : ( Int, Bool ) -> String
 printCell ( v, t ) =
     if not t then
         " " ++ printInt v ++ " "
@@ -200,6 +205,7 @@ printCell ( v, t ) =
         "[" ++ printInt v ++ "]"
 
 
+printInt : Int -> String
 printInt i =
     if i < 10 then
         " " ++ String.fromInt i
@@ -212,16 +218,19 @@ printInt i =
 -- values
 
 
+cardValue : Card -> Int
 cardValue c =
     List.map rangeValue (ranges c)
         |> List.sum
 
 
+rangeValue : Range -> Int
 rangeValue r =
     List.map cellValue (cells r)
         |> List.sum
 
 
+cellValue : ( number, Bool ) -> number
 cellValue ( v, t ) =
     if t then
         0

@@ -8,7 +8,7 @@ To run an example, you need to have installed [Elm Posix](https://github.com/alb
 Then for example, you can run the code with this:
 
 ```
-→ elm-cli run src/Day.elm <day number>
+→ elm-cli run src/AdventOfCode.elm <day number>
 part1 : <value>
 part2 : <value>
 ```
