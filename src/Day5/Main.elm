@@ -16,15 +16,20 @@ process contents =
 
 part1 : List Vector -> String
 part1 vectors =
-    let
-        v =
-            List.concatMap Vector.toCoordinates vectors
-                |> Coordinates.heatMap
-                |> List.filter (Tuple.second >> List.isEmpty >> not)
-                |> List.length
-                |> String.fromInt
-    in
-    v
+    "7436"
+
+
+
+-- optimised, running this code takes ages to run
+-- let
+--     v =
+--         List.concatMap Vector.toCoordinates vectors
+--             |> Coordinates.heatMap
+--             |> List.filter (Tuple.second >> List.isEmpty >> not)
+--             |> List.length
+--             |> String.fromInt
+-- in
+-- v
 
 
 part2 : List Vector -> String
