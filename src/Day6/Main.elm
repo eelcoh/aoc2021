@@ -23,5 +23,7 @@ part1 fish =
 
 
 part2 : Fish -> String
-part2 l =
-    "not implemented"
+part2 fish =
+    Fish.roll 256 fish
+        -- |> List.length
+        |> String.fromInt
