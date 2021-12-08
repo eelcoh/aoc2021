@@ -26,6 +26,27 @@ toCoordinates ( ( x1, y1 ), ( x2, y2 ) ) =
         List.range (min x1 x2) (max x1 x2)
             |> List.map (\x -> ( x, y1 ))
 
+    else if (max y1 y2 - min y1 y2) == (max x1 x2 - min x1 x2) then
+        let
+            reverseRange a b =
+                List.reverse <| List.range b a
+
+            ( x_range, y_range ) =
+                case ( x1 < x2, y1 < y2 ) of
+                    ( True, True ) ->
+                        ( List.range x1 x2, List.range y1 y2 )
+
+                    ( True, False ) ->
+                        ( List.range x1 x2, reverseRange y1 y2 )
+
+                    ( False, True ) ->
+                        ( reverseRange x1 x2, List.range y1 y2 )
+
+                    ( False, False ) ->
+                        ( reverseRange x1 x2, reverseRange y1 y2 )
+        in
+        List.map2 Tuple.pair x_range y_range
+
     else
         []
 

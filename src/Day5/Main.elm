@@ -34,4 +34,12 @@ part1 vectors =
 
 part2 : List Vector -> String
 part2 vectors =
-    "not implemented"
+    let
+        v =
+            List.concatMap Vector.toCoordinates vectors
+                |> Coordinates.heatMap
+                |> List.filter (Tuple.second >> List.isEmpty >> not)
+                |> List.length
+                |> String.fromInt
+    in
+    v
