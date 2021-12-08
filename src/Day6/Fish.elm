@@ -2,7 +2,11 @@ module Day6.Fish exposing (..)
 
 
 type alias Fish =
-    List Int
+    Int
+
+
+type alias Shoal =
+    List Fish
 
 
 type alias SpawnTable =
@@ -41,8 +45,8 @@ initTable =
 -- See readme.md for explanation
 
 
-rollover : Int -> SpawnTable -> SpawnTable
-rollover days table =
+calculateTable : Int -> SpawnTable -> SpawnTable
+calculateTable days table =
     let
         f ( k, _ ) =
             if k == 0 then
@@ -59,14 +63,14 @@ rollover days table =
     else
         table
             |> List.filterMap f
-            |> rollover (days - 1)
+            |> calculateTable (days - 1)
 
 
-roll : Int -> Fish -> Int
-roll days fish =
+process : Int -> Shoal -> Int
+process days fish =
     let
         table =
-            rollover days initTable
+            calculateTable days initTable
     in
     List.filterMap (lookup table) fish
         |> List.sum
@@ -76,17 +80,17 @@ roll days fish =
 {- NAIVE will stack overflow -}
 
 
-rollNaive : Int -> Fish -> Fish
-rollNaive days fish =
+processNaive : Int -> Shoal -> Shoal
+processNaive days fish =
     if days <= 0 then
         fish
 
     else
-        rollNaive (days - 1) (rollOnceNaive fish)
+        processNaive (days - 1) (processOneNaive fish)
 
 
-rollOnceNaive : Fish -> Fish
-rollOnceNaive fish =
+processOneNaive : Shoal -> Shoal
+processOneNaive fish =
     case fish of
         [] ->
             []
@@ -97,17 +101,17 @@ rollOnceNaive fish =
                     x - 1
             in
             if newX < 0 then
-                6 :: 8 :: rollOnceNaive rest
+                6 :: 8 :: processOneNaive rest
 
             else
-                newX :: rollOnceNaive rest
+                newX :: processOneNaive rest
 
 
 
 -- parse
 
 
-parse : String -> Fish
+parse : String -> Shoal
 parse contents =
     String.lines contents
         |> List.head
@@ -115,7 +119,7 @@ parse contents =
         |> Maybe.withDefault []
 
 
-parse_ : String -> Fish
+parse_ : String -> Shoal
 parse_ contents =
     String.split "," contents
         |> List.filterMap String.toInt

@@ -3,27 +3,27 @@
 ## Naive implementation
 The first implementation was a naive one:
 ```elm
-rollNaive : Int -> Fish -> Fish
-rollNaive days fish =
+calculateNaive : Int -> Shoal -> Shoal
+calculateNaive days shoal =
     if days <= 0 then
-        fish
+        shoal
 
     else
-        rollNaive (days - 1) (rollOnceNaive fish)
+        calculateNaive (days - 1) (calculateOnceNaive shoal)
 
-rollOnceNaive : Fish -> Fish
-rollOnceNaive fish =
-    case fish of
-        x :: rest ->
+calculateOnceNaive : Shoal -> Shoal
+calculateOnceNaive shoal =
+    case shoal of
+        fish :: rest ->
             let
-                newX =
-                    x - 1
+                newFish =
+                    fish - 1
             in
-            if newX < 0 then
-                6 :: 8 :: rollOnceNaive rest
+            if newFish < 0 then
+                6 :: 8 :: calculateOnceNaive rest
 
             else
-                newX :: rollOnceNaive rest
+                newFish :: calculateOnceNaive rest
 
         [] ->
             []
@@ -36,16 +36,19 @@ It works, up till a certain number of days or a certain number of fish. Then it 
 So there must be another way. And there is.
 
 ## Less naive
-The first thing to notice is that the fish spawn independently. One fish does not need other fish to spawn. That means you can map the functions to all the fish.
+There are a couple of things to notice:
+* First, the fish spawn independently. One fish does not need other fish to spawn. That means you can map the functions to all the fish.
 
-The second thing to notice is that the spawn values are never higher than 8.
+* Second, the spawn values are never higher than 8.
 
 Take one and two and it suddenly makes sense to calculate the number of offspring for spawn values [0..8], and then for any value in the input lookup the calculated offspring, and sum them.
 
 That worked fine for 80 days. But it did not for 256 days, it would still overflow because the size of the offspring after so many generations becomes huge.
 
 ## Optimised
-That brings us to the third thing to notice: if we can calculate the offspring for 80 days, we can also calculate it for 1 day. And if we have the calculation for 1 day, we can base the calculation for 2 days on that, and so on to day n+1. We do not need to keep track of the values for day n once we have calculated the values for n+1. That means we can have a very limited data structure, where we basically keep the function spawn -> offspring, starting with an initial table.
+That brings us to the third thing to notice: we can turn the calculation upside down. If we can calculate the offspring for 80 days, we can also calculate it for 1 day. 
+
+And if we have the calculation for 1 day, we can base the calculation for 2 days on that, and so on to day n+1. We do not need to keep track of the values for day n once we have calculated the values for n+1. That means we can have a very limited data structure, where we basically keep the function spawn -> offspring, starting with an initial table.
 
 ```elm
 -- initial
